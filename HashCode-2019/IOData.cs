@@ -9,7 +9,7 @@ namespace HashCode_2019
 {
     static public class IOData
     {
-        static List<Picture> GetFromFile(string fileName) {
+        static public List<Picture> GetFromFile(string fileName) {
 
             var res = new List<Picture>();
 
@@ -35,7 +35,7 @@ namespace HashCode_2019
         }
 
 
-        static void GenerateFile(List<Slide> slides) {
+        static public void GenerateFile(List<Slide> slides) {
             using (StreamWriter sw = new StreamWriter("out.put")) {
                 sw.WriteLine(slides.Count);
                 for (int i = 0; i < slides.Count; i++) {

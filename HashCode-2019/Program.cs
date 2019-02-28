@@ -9,7 +9,9 @@ namespace HashCode_2019
     class Program
     {
         static void Main(string[] args) {
-
+            var l = IOData.GetFromFile("e.txt");
+            Testing.CountFotoTag(l);
+            Console.ReadLine();
         }
     }
 }
