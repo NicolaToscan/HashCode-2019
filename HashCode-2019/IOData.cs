@@ -35,8 +35,8 @@ namespace HashCode_2019
         }
 
 
-        static public void GenerateFile(List<Slide> slides) {
-            using (StreamWriter sw = new StreamWriter("out.put")) {
+        static public void GenerateFile(List<Slide> slides, string output) {
+            using (StreamWriter sw = new StreamWriter(output)) {
                 sw.WriteLine(slides.Count);
                 for (int i = 0; i < slides.Count; i++) {
                     sw.WriteLine(String.Join(" ", slides[i].Pics.Select(p => p.Id)));

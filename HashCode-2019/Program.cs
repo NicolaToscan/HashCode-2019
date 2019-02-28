@@ -11,7 +11,9 @@ namespace HashCode_2019
         List<Picture> res = new List<Picture>();
 
         static void Main(string[] args) {
-            var l = IOData.GetFromFile("b.txt");
+            string input = Console.ReadLine();
+            string output = Console.ReadLine();
+            var l = IOData.GetFromFile(input);
             Testing.SetHorizontal(l);
             Testing.SetAll(l);
 
@@ -29,7 +31,7 @@ namespace HashCode_2019
             Slide inizio = new Slide(prima);
 
             var finito = Testing.Doeverything(inizio);
-            IOData.GenerateFile(finito);
+            IOData.GenerateFile(finito, output);
             Console.ReadLine();
         }
 

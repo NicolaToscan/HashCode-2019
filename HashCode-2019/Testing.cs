@@ -19,6 +19,8 @@ namespace HashCode_2019
                 res.Add(curr);
                 RemoveImgSlide(curr);
                 prev = curr;
+                if (listPicture.Count % 10 == 0)
+                    Console.WriteLine(listPicture.Count);
             }
 
             return res;
@@ -34,20 +36,15 @@ namespace HashCode_2019
 
         static public Slide BestMatch(Slide slide) {
 
-            var all = listPicture.Select(p => {
-                var pt = (0, 0, 0);
-                Picture compP = null;
-                if (p.orientation == EOrientation.Horizontal)
-                    pt = CalcPoint(slide, p);
-                else {
-                    compP = BestCompanionPicture(slide, p);
-                    pt = CalcPoint(slide, p, compP);
-                }
+            var aa = listPicture.Take(toDo(listPicture.Count)).Select(p => trovaPunti(p, slide));
+            var firstTop = aa.OrderByDescending(p => p.Item1).First();
+            var temp = listPicture.Skip(toDo(listPicture.Count)).FirstOrDefault(p => trovaPunti(p, slide).Item1 > firstTop.Item1);
 
-                return (PTMin(pt), p, compP);
-            }).OrderByDescending(p => p.Item1).First();
+            var top = firstTop;
+            if (temp != null)
+                top = trovaPunti(temp, slide);
 
-            var tt = all.ToTuple();
+            var tt = top.ToTuple();
             var picsRes = new List<Picture>();
             picsRes.Add(tt.Item2);
 
@@ -58,11 +55,37 @@ namespace HashCode_2019
 
         }
 
+        static public int toDo(int n) {
+            if (n < 1000)
+                return n;
+            else
+                return (n / 100) * 10;
+        }
+
+        public static (int, Picture, Picture) trovaPunti(Picture p, Slide slide) {
+            var pt = (0, 0, 0);
+            Picture compP = null;
+            if (p.orientation == EOrientation.Horizontal)
+                pt = CalcPoint(slide, p);
+            else {
+                pt = CalcPoint(slide, p);
+                if (PTMin(pt) == 0) {
+                    compP = BestCompanionPicture(slide, p);
+                    pt = CalcPoint(slide, p, compP);
+                }
+            }
+
+            return (PTMin(pt), p, compP);
+        }
+
+
+
         static public Picture BestCompanionPicture(Slide prev, Picture origina) {
-            return vert.Select(p => {
+            return vert.Take(toDo(vert.Count)).Select(p => {
                 var pt = CalcPoint(prev, p, origina);
                 return (PTMin(pt), p);
             }).OrderByDescending(p => p.Item1).First().ToTuple().Item2;
+
         }
 
         static public (int prev, int comm, int succ) CalcPoint(Slide s1, Slide s2) {
