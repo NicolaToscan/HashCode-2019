@@ -8,10 +8,30 @@ namespace HashCode_2019
 {
     class Program
     {
+        List<Picture> res = new List<Picture>();
+
         static void Main(string[] args) {
-            var l = IOData.GetFromFile("e.txt");
-            Testing.CountFotoTag(l);
+            var l = IOData.GetFromFile("b.txt");
+            Testing.SetHorizontal(l);
+            Testing.SetAll(l);
+
+            List<Picture> prima = new List<Picture>();
+            var trovata = Testing.listPicture.FirstOrDefault(p => p.orientation == EOrientation.Horizontal);
+            if (trovata == null) {
+                prima = Testing.listPicture.Where(p => p.orientation == EOrientation.Vertical).Take(2).ToList();
+                Testing.listPicture.Remove(prima[0]);
+                Testing.listPicture.Remove(prima[1]);
+            } else {
+                prima.Add(trovata);
+                Testing.listPicture.Remove(trovata);
+            }
+
+            Slide inizio = new Slide(prima);
+
+            var finito = Testing.Doeverything(inizio);
+            IOData.GenerateFile(finito);
             Console.ReadLine();
         }
+
     }
 }

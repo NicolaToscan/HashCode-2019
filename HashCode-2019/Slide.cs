@@ -12,10 +12,11 @@ namespace HashCode_2019
         public List<string> Tags { get; set; }
 
         public Slide(List<Picture> pics) {
+            Pics = pics;
             if (pics.Count == 1)
                 Tags = pics[0].Tags;
             else
-                Tags = pics[0].Tags.Intersect(pics[1].Tags).ToList();
+                Tags = pics[0].Tags.Union(pics[1].Tags).ToList();
         }
     }
 }
