@@ -24,26 +24,84 @@ namespace HashCode_2019
             int hh = 0;
         }
 
+        static public void BestMatch(List<Picture> listPicture, Slide slide) {
 
+            var listMatch = listPicture.Select(p => {
+                var pt = (0, 0, 0);
+                if (p.orientation == EOrientation.Vertical)
+                    pt = CalcPoint(slide, p);
+                else {
+                    Picture compP = BestCompanionPicture(slide);
+                    pt = CalcPoint(slide, p, compP);
+                }
 
-
-        static public void BestMatch(List<Picture> listPicture, Picture picture) {
-            var listMatch = listPicture.Select(p => p.Tags).Select(tags => {
-                int common = picture.Tags.Intersect(tags).Count();
-                int diff = picture.Tags.Count() - common;
-                return 0;
-
+                return (0);
             });
+
         }
+
+
+        static public Picture BestCompanionPicture(Slide origina) {
+            //hor.Select(p => p.Tags).Select()
+            return new Picture();
+        }
+
+        static public (int prev, int comm, int succ) CalcPoint(Slide s1, Slide s2) {
+            int comm = s1.Tags.Intersect(s2.Tags).Count();
+            int prev = s1.Tags.Count() - comm;
+            int succ = s2.Tags.Count() - comm;
+
+            return (prev, comm, succ);
+        }
+
+        static public (int prev, int comm, int succ) CalcPoint(Slide s1, Picture s2) {
+            int comm = s1.Tags.Intersect(s2.Tags).Count();
+            int prev = s1.Tags.Count() - comm;
+            int succ = s2.Tags.Count() - comm;
+
+            return (prev, comm, succ);
+        }
+
+        static public (int prev, int comm, int succ) CalcPoint(Picture s1, Picture s2) {
+            int comm = s1.Tags.Intersect(s2.Tags).Count();
+            int prev = s1.Tags.Count() - comm;
+            int succ = s2.Tags.Count() - comm;
+
+            return (prev, comm, succ);
+        }
+
+        static public (int prev, int comm, int succ) CalcPoint(Slide s1, Picture p1, Picture p2) {
+            var tag2 = p1.Tags.Intersect(p2.Tags);
+
+            int comm = s1.Tags.Intersect(tag2).Count();
+            int prev = s1.Tags.Count() - comm;
+            int succ = tag2.Count() - comm;
+
+            return (prev, comm, succ);
+        }
+
+        static public int PTMin((int a, int b, int c) pt) {
+            if (pt.a < pt.b && pt.a < pt.b) {
+                return pt.a;
+            } else if (pt.b < pt.c) {
+                return pt.b;
+            } else {
+                return pt.c;
+            }
+        }
+
+
+
+
+
+
+
+
+
 
         static public void SetHorizontal(List<Picture> pp) {
             hor = pp.Where(p => p.orientation == EOrientation.Vertical).ToList();
         }
-
-        static public void BestCompanionPicture(List<Picture> listPicture, Picture picture) {
-
-        }
-
 
     }
 }

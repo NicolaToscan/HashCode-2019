@@ -8,6 +8,14 @@ namespace HashCode_2019
 {
     public class Slide
     {
-        public List<Picture> pics { get; set; }
+        public List<Picture> Pics { get; set; }
+        public List<string> Tags { get; set; }
+
+        public Slide(List<Picture> pics) {
+            if (pics.Count == 1)
+                Tags = pics[0].Tags;
+            else
+                Tags = pics[0].Tags.Intersect(pics[1].Tags).ToList();
+        }
     }
 }

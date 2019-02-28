@@ -18,7 +18,7 @@ namespace HashCode_2019
                 for (int i = 0; i < nLines; i++) {
                     string[] line = sr.ReadLine().Split(' ');
                     EOrientation o = line[0] == "H" ? EOrientation.Horizontal : EOrientation.Vertical;
-                    int id = Convert.ToInt32(line[1]);
+                    int id = i;
                     List<string> tags = line.ToList();
                     tags.RemoveAt(0);
                     tags.RemoveAt(0);
@@ -39,7 +39,7 @@ namespace HashCode_2019
             using (StreamWriter sw = new StreamWriter("out.put")) {
                 sw.WriteLine(slides.Count);
                 for (int i = 0; i < slides.Count; i++) {
-                    sw.WriteLine(String.Join(" ", slides[i].pics.Select(p => p.Id)));
+                    sw.WriteLine(String.Join(" ", slides[i].Pics.Select(p => p.Id)));
                 }
             }
         }
