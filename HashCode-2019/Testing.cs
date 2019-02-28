@@ -59,7 +59,7 @@ namespace HashCode_2019
             if (n < 1000)
                 return n;
             else
-                return (n / 100) * 10;
+                return (n / 100);
         }
 
         public static (int, Picture, Picture) trovaPunti(Picture p, Slide slide) {
