@@ -10,6 +10,7 @@ namespace HashCode_2019
     {
         static void Main(string[] args) {
             //TEST Nicola Toscan
+            //TEST Sebastian Sani
             // The code provided will print ‘Hello World’ to the console.
             // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
             Console.WriteLine("Hello World!");
