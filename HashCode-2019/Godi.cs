@@ -61,14 +61,36 @@ namespace HashCode_2019
 
     /* ---------------------------------------------------------- */
 
-    public class Slide
-    {
-        IOutput Sx, Dx;
+    //public class Slide
+    //{
+    //    IOutput Sx, Dx;
 
-        public Slide(IOutput Sx, IOutput Dx)
+    //    public Slide(IOutput Sx, IOutput Dx)
+    //    {
+    //        this.Sx = Sx;
+    //        this.Dx = Dx;
+    //    }
+    //}
+
+    /* ---------------------------------------------------------- */
+
+    public class Score
+    {
+        public int i, j;
+        public double score;
+        public double howgood;
+
+        public Score(int i, int j, double score)
         {
-            this.Sx = Sx;
-            this.Dx = Dx;
+            this.i = i;
+            this.j = j;
+            this.score = score;
+
+            howgood = 50.0 - score;
+            if (howgood < 0)
+            {
+                howgood = -howgood;
+            }
         }
     }
 
@@ -90,28 +112,6 @@ namespace HashCode_2019
 
     /* ---------------------------------------------------------- */
 
-    public class Score
-    {
-        public int i, j;
-        public double score;
-        public double howgood;
-
-        public Score(int i, int j, double score)
-        {
-            this.i = i;
-            this.j = j;
-            this.score = score;
-
-            howgood = 50.0 - score;
-            if(howgood < 0)
-            {
-                howgood = -howgood;
-            }
-        }
-    }
-
-    /* ---------------------------------------------------------- */
-
     public static class Godi
     {
         /// <summary>
@@ -127,8 +127,8 @@ namespace HashCode_2019
         public static void Ordina(List<Picture> pl)
         {
             // Divido verticali e orizzontali
-            var verticali = pl.Where(x => x.orientation == Orientation.Horizontal).OrderByDescending(x => x.Tags.Count);
-            var orizzontali = pl.Where(x => x.orientation == Orientation.Vertical).OrderByDescending(x => x.Tags.Count);
+            var verticali = pl.Where(x => x is VerticalPicture).OrderByDescending(x => x.Tags.Count);
+            var orizzontali = pl.Where(x => x is HorizontalPicture).OrderByDescending(x => x.Tags.Count);
             
             // Verticali
             int totvert = verticali.Count();

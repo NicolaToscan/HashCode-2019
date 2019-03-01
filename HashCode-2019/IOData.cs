@@ -11,7 +11,7 @@ namespace HashCode_2019
     {
         static public List<Picture> GetFromFile(string fileName) {
 
-            var res = new List<Picture>();
+            List<Picture> res = new List<Picture>();
 
             using (StreamReader sr = new StreamReader(fileName)) {
                 int nLines = Convert.ToInt32(sr.ReadLine());
@@ -23,11 +23,10 @@ namespace HashCode_2019
                     tags.RemoveAt(0);
                     tags.RemoveAt(0);
 
-                    res.Add(new Picture() {
-                        Id = id,
-                        orientation = o,
-                        Tags = tags
-                    });
+                    if (o == Orientation.Horizontal)
+                        res.Add(new HorizontalPicture(id, tags));
+                    else
+                        res.Add(new VerticalPicture(id, tags));
                 }
             }
 
@@ -35,11 +34,12 @@ namespace HashCode_2019
         }
 
 
-        static public void GenerateFile(List<Slide> slides) {
-            using (StreamWriter sw = new StreamWriter("out.put")) {
+        static public void GenerateFile(List<IOutput> slides, string outputFile) {
+            using (StreamWriter sw = new StreamWriter(outputFile)) {
                 sw.WriteLine(slides.Count);
-                for (int i = 0; i < slides.Count; i++) {
-                    sw.WriteLine(String.Join(" ", slides[i].pics.Select(p => p.Id)));
+                foreach(IOutput str in slides)
+                {
+                    sw.WriteLine(str.GetOutput());
                 }
             }
         }
