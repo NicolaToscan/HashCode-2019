@@ -10,7 +10,7 @@ namespace HashCode_2019
     {
         public int Id;
         public EOrientation orientation;
-        public List<string> Tags;
+        public IEnumerable<int> Tags;
     }
 
     public enum EOrientation
