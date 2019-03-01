@@ -17,8 +17,8 @@ namespace HashCode_2019
                 int nLines = Convert.ToInt32(sr.ReadLine());
                 for (int i = 0; i < nLines; i++) {
                     string[] line = sr.ReadLine().Split(' ');
-                    EOrientation o = line[0] == "H" ? EOrientation.Horizontal : EOrientation.Vertical;
-                    int id = Convert.ToInt32(line[1]);
+                    Orientation o = line[0] == "H" ? Orientation.Horizontal : Orientation.Vertical;
+                    int id = i;
                     List<string> tags = line.ToList();
                     tags.RemoveAt(0);
                     tags.RemoveAt(0);
