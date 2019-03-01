@@ -9,9 +9,9 @@ namespace HashCode_2019
     public class Picture : ITag, IEquatable<Picture>
     {
         public int Id;
-        public List<string> Tags;
+        public List<int> Tags;
 
-        public Picture(int Id, List<string> Tags)
+        public Picture(int Id, List<int> Tags)
         {
             this.Id = Id;
             this.Tags = Tags;
@@ -22,21 +22,26 @@ namespace HashCode_2019
             return Id == other.Id;
         }
 
-        List<string> ITag.GetTags()
+        List<int> ITag.GetTags()
         {
             return Tags;
+        }
+
+        public int CountTags()
+        {
+            return Tags.Count();
         }
     }
 
     public class HorizontalPicture : Picture, IOutput
     {
-        public HorizontalPicture(int Id, List<string> Tags) : base(Id, Tags) { }
+        public HorizontalPicture(int Id, List<int> Tags) : base(Id, Tags) { }
         public string GetOutput() => Id.ToString();
     }
 
     public class VerticalPicture : Picture
     {
-        public VerticalPicture(int Id, List<string> Tags) : base(Id, Tags) { }
+        public VerticalPicture(int Id, List<int> Tags) : base(Id, Tags) { }
     }
 
     /* ---------------------------------------------------------- */
@@ -53,9 +58,14 @@ namespace HashCode_2019
 
         public string GetOutput() => $"{A.Id.ToString()} {B.Id.ToString()}";
 
-        List<string> ITag.GetTags()
+        List<int> ITag.GetTags()
         {
             return A.Tags.Union(B.Tags).ToList();
+        }
+
+        public int CountTags()
+        {
+            return A.Tags.Union(B.Tags).Count();
         }
     }
 
@@ -76,21 +86,14 @@ namespace HashCode_2019
 
     public class Score
     {
-        public int i, j;
+        public Picture i, j;
         public double score;
-        public double howgood;
 
-        public Score(int i, int j, double score)
+        public Score(Picture i, Picture j, double score)
         {
             this.i = i;
             this.j = j;
             this.score = score;
-
-            howgood = 50.0 - score;
-            if (howgood < 0)
-            {
-                howgood = -howgood;
-            }
         }
     }
 
@@ -103,7 +106,8 @@ namespace HashCode_2019
 
     public interface ITag
     {
-        List<string> GetTags();
+        List<int> GetTags();
+        int CountTags();
     }
     public interface IOutput
     {
@@ -124,58 +128,67 @@ namespace HashCode_2019
         /// </summary>
         public const int SPC = PPC / 4;
 
-        public static void Ordina(List<Picture> pl)
+        public static List<IOutput> Ordina(List<Picture> pl)
         {
+            W(" Inizializzazione...");
+
             // Divido verticali e orizzontali
             var verticali = pl.Where(x => x is VerticalPicture).OrderByDescending(x => x.Tags.Count);
             var orizzontali = pl.Where(x => x is HorizontalPicture).OrderByDescending(x => x.Tags.Count);
-            
+
+            List<VerticalPicture> verticaliList = verticali.Select(x => (VerticalPicture)x).ToList();
+
+
+            W(" Verticali...");
             // Verticali
-            int totvert = verticali.Count();
-            while(verticali.Count() > 0)
+            int totVerticali = verticali.Count();
+            int restanti = totVerticali;
+            while(restanti > 0)
             {
+                // Quante foto e quanti accoppiamenti devo confrontare questo ciclo
+                int toSeeFoto = restanti > PPC ? PPC : restanti;
+                int toSeeAccoppiamenti = restanti / 2;
+
                 // Quante foto prendo da tutte le verticali
-                int foto_confrontate = PPC;
+                int toDoAccoppiamenti = restanti > PPC ? SPC : toSeeAccoppiamenti;
 
-                List<Picture> sub = new List<Picture>();
-                for(int i = 0; i < foto_confrontate && verticali.Count() > 0; i++)
+                // Calcolo tutti i punteggi
+                List<Score> scores = new List<Score>();
+                for (int i = 0; i < toSeeFoto; i++)
                 {
-                    //sub.Add(verticali[i]);
-                }
-
-                //Score[,] scores = new Score[dim, dim];
-                List<Score> ordered = new List<Score>();
-                for(int i = 0; i < foto_confrontate; i++)
-                {
-                    for(int j = 0; j < foto_confrontate; j++)
+                    for(int j = 0; j < toSeeFoto - i && i > j; j++)
                     {
-                        if(i != j)
-                        {
-                            //scores[i, j] = new Score(i, j, ContaTagsCondivisi(sub[i], sub[j]));
-                            ordered.Add(new Score(i, j, ContaTagsCondivisi(sub[i], sub[j])));
-                        }
+                        //VerticalPicture a = (VerticalPicture)verticali.ElementAt(i);
+                        //VerticalPicture b = (VerticalPicture)verticali.ElementAt(j);
+                        VerticalPicture a = verticaliList[i];
+                        VerticalPicture b = verticaliList[j];
+
+                        int db = CalcolaPunteggioTags(a, b);
+                        scores.Add(new Score(a, b, db));
                     }
                 }
-                ordered = ordered.OrderBy(x => x.howgood).ToList();
-
-                List<TwoVertical> tieni = new List<TwoVertical>();
-                for(int i = 0; i < foto_confrontate / 4; i++)
-                {
-                    //tieni.Add(new tw)
-                }
+                var ordered_scores = scores.OrderByDescending(x => x.score);
+                
             }
 
             // Orizzontali
             // ...
-            int hh = 0;
+            return null;
         }
 
-        public static double ContaTagsCondivisi(ITag p1, ITag p2)
+        public static int CalcolaPunteggioTags(ITag p1, ITag p2)
         {
-            List<string> tot = p1.GetTags().Union(p2.GetTags()).ToList();
-            List<string> condivisi = p1.GetTags().Intersect(p2.GetTags()).ToList();
-            return (double)condivisi.Count / tot.Count;
+            int condivisi = p1.GetTags().Intersect(p2.GetTags()).Count();
+            int uniciSx = p1.GetTags().Except(p2.GetTags()).Count();
+            int uniciDx = p2.GetTags().Except(p1.GetTags()).Count();
+            return minore(condivisi, uniciSx, uniciDx);
+
+            // F
+            int minore(int a, int b, int c) => (a < b) ? ((a < c) ? a : c) : ((b < c) ? b : c);
         }
+
+        static void W(string txt) => Console.Write(txt);
+        static void WL(string txt) => Console.WriteLine(txt);
     }
     public static class Robe
     {

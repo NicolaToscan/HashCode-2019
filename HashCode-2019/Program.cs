@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using static System.Console;
+//using static System.Console;
 
 namespace HashCode_2019
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args) {
             string[] files = { "a.txt", "b.txt", "c.txt", "d.txt", "e.txt" };
+            files[0] = "e.txt";
 
             int nFolder = 1;
             while(Directory.Exists(nFolder.ToString()))
@@ -24,15 +25,19 @@ namespace HashCode_2019
             for(int i = 0; i < files.Length; i++)
             {
                 string path = SxPath + files[i];
-                Write($"Calcolo file {i + 1}. Attendi...");
+                W($"Calcolo file {i + 1}. Attendi...");
                 //
                 var l = IOData.GetFromFile(files[0]);
-                Godi.Ordina(l);
+                var ll = Godi.Ordina(l);
+                IOData.GenerateFile(ll, path);
                 //
-                WriteLine("Ok!");
+                WL("Ok!");
             }
 
-            ReadLine();
+            Console.ReadLine();
         }
+
+        static void W(string txt) => Console.Write(txt);
+        static void WL(string txt) => Console.WriteLine(txt);
     }
 }
